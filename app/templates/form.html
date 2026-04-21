@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-md-10 col-lg-8">
+        
+        <!-- Wizard Card -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                
+                <!-- Dynamic Progress Bar -->
+                <div class="mb-5">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold {% if step == 1 %}text-primary{% else %}text-muted{% endif %}">
+                            1. Student Details
+                        </span>
+                        <span class="fw-bold {% if step == 2 %}text-primary{% else %}text-muted{% endif %}">
+                            2. Add Marks & Calculate
+                        </span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                             role="progressbar" 
+                             style="width: {{ '50%' if step == 1 else '100%' }};" 
+                             aria-valuenow="{{ '50' if step == 1 else '100' }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 1: ADD STUDENT -->
+                {% if step == 1 %}
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus text-primary display-5"></i>
+                    <h3 class="fw-bold mt-2">Initialize Student Record</h3>
+                    <p class="text-muted">Enter the student's identification to begin entering marks.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('calculator', step=1) }}">
+                    {{ addStudent.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ addStudent.studentName.label(class="form-label fw-semibold") }}
+                        {{ addStudent.studentName(class="form-control" + (" is-invalid" if addStudent.studentName.errors else ""), placeholder="Enter Student's Full Name") }}
+                        {% for error in addStudent.studentName.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ addStudent.rollno.label(class="form-label fw-semibold") }}
+                        {{ addStudent.rollno(class="form-control" + (" is-invalid" if addStudent.rollno.errors else ""), placeholder="Enter Roll Number") }}
+                        {% for error in addStudent.rollno.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">This roll number will be used as the student's initial password.</div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                            Proceed to Marks <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+
+
+                <!-- STEP 2: DYNAMIC SUBJECT LIST & CALCULATION -->
+                {% if step == 2 %}
+                <div class="mb-4">
+                    <h3 class="fw-bold text-dark mb-1">Compute Academic Performance</h3>
+                    <p class="text-muted">Fill out the performance breakdown for each subject. Weighted scores and CGPA are computed automatically.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('calculator', step=2, rollno=request.args.get('rollno')) }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="subject-container">
+                        {% for item in form.items %}
+                        <div class="card mb-3 border-0 bg-light shadow-sm">
+                            <div class="card-body">
+                                <div class="row g-3 align-items-end">
+                                    
+                                    <!-- Subject Name -->
+                                    <div class="col-md-4">
+                                        {{ item.sub.label(class="form-label small fw-bold text-uppercase text-muted") }}
+                                        {{ item.sub(class="form-control form-control-sm", placeholder="e.g. Mathematics") }}
+                                    </div>
+                                    
+                                    <!-- Credits -->
+                                    <div class="col-md-2">
+                                        {{ item.credits.label(class="form-label small fw-bold text-uppercase text-muted") }}
+                                        {{ item.credits(class="form-control form-control-sm", placeholder="0") }}
+                                    </div>
+
+                                    <!-- Internals -->
+                                    <div class="col-md-3">
+                                        {{ item.internal_marks.label(class="form-label small fw-bold text-uppercase text-muted") }}
+                                        {{ item.internal_marks(class="form-control form-control-sm", placeholder="Max 40") }}
+                                    </div>
+
+                                    <!-- Externals -->
+                                    <div class="col-md-3">
+                                        {{ item.marks.label(class="form-label small fw-bold text-uppercase text-muted") }}
+                                        {{ item.marks(class="form-control form-control-sm", placeholder="Max 100") }}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Row Controls -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            {{ form.reset(class="btn btn-outline-secondary fw-semibold") }}
+                        </div>
+                        <div>
+                            <!-- Add Subject Button -->
+                            {{ form.add_subject(class="btn btn-info text-white me-2 fw-semibold") }}
+                            
+                            <!-- Submit and Calculate Button -->
+                            {{ form.submit(class="btn btn-success btn-lg px-4 fw-bold shadow-sm") }}
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

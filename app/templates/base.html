@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GradeMaster | Student Portal</title>
+    
+    <!-- Bootswatch Flatly Theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/flatly/bootstrap.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .flash-container {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modern Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+        <div class="container">
+            <!-- Logo / Brand -->
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('classroom') if current_user.is_authenticated else url_for('index') }}">
+                <i class="bi bi-mortarboard-fill me-2 fs-3"></i>
+                <span>GradeMaster</span>
+            </a>
+
+            <!-- Mobile Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    {% if current_user.is_authenticated %}
+                        <!-- Shared Classroom Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('classroom') }}">
+                                <i class="bi bi-people me-1"></i> Classroom
+                            </a>
+                        </li>
+                        <!-- Logged In Links -->
+                        <li class="nav-item">
+                            {% if current_user.role == 'teacher' %}
+                                <a class="nav-link" href="{{ url_for('calculator') }}">
+                                    <i class="bi bi-calculator me-1"></i> Calculator
+                                </a>
+                            {% else %}
+                                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-1"></i> My Dashboard
+                                </a>
+                            {% endif %}
+                        </li>
+
+                        <li class="nav-item dropdown ms-lg-3">
+                            <a class="nav-link dropdown-toggle btn btn-outline-light btn-sm text-white px-3" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1"></i> {{ current_user.userName }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('changePassword') }}"><i class="bi bi-key me-2"></i>Change Password</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    {% else %}
+                        <!-- Guest Links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('studentLogin') }}">Student Portal</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="teacherMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Teachers
+                            </a>
+                            <ul class="dropdown-menu shadow border-0" aria-labelledby="teacherMenu">
+                                <li><a class="dropdown-item" href="{{ url_for('teacherLogin') }}">Teacher Login</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('teacherRegister') }}">Create Account</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container py-4">
+        
+        <!-- Flash Messages Section -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }} alert-dismissible fade show shadow-sm" role="alert">
+                                <i class="bi {{ 'bi-exclamation-triangle' if category == 'error' else 'bi-info-circle' }} me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <!-- Block Content for Child Templates -->
+        {% block content %}{% endblock %}
+
+    </main>
+
+    <!-- Footer (Optional) -->
+    <footer class="text-center py-4 text-muted small">
+        <div class="container">
+            <hr>
+            <p>Miniproject: Academic Management System</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

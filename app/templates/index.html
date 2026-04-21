@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 mb-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6 text-center text-lg-start">
+            <h1 class="display-3 fw-bold lh-1 mb-3 text-primary">Student Portal <span class="text-info">Performance & Insights.</span></h1>
+            <p class="lead text-muted mb-4">
+                An automated system for teachers to compute CGPA and for students to monitor their semester progress with data-driven insights.
+            </p>
+            <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+                <a href="{{ url_for('studentLogin') }}" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold shadow">
+                    <i class="bi bi-mortarboard me-2"></i>Student Portal
+                </a>
+                <a href="{{ url_for('teacherLogin') }}" class="btn btn-outline-secondary btn-lg px-4 fw-bold">
+                    <i class="bi bi-person-workspace me-2"></i>Teacher Login
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <!-- Modern Illustration Placeholder using Bootstrap Icons -->
+            <div class="p-5 bg-white rounded-5 shadow-sm border d-flex justify-content-center align-items-center">
+                <i class="bi bi-bar-chart-line text-info" style="font-size: 12rem;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Grid -->
+<section class="py-5 bg-white rounded-4 shadow-sm px-4 px-md-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Designed for Academic Excellence</h2>
+        <p class="text-muted">Simple tools built to handle complex grading logic.</p>
+    </div>
+
+    <div class="row g-4 py-2 row-cols-1 row-cols-lg-3">
+        <!-- Feature 1 -->
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3 text-primary bg-light rounded-circle p-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-calculator"></i>
+            </div>
+            <h4 class="fw-bold">Smart Calculation</h4>
+            <p class="text-muted">Advanced weighting logic that combines internal and external marks to produce accurate CGPA results automatically.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3 text-success bg-light rounded-circle p-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <h4 class="fw-bold">Secure Access</h4>
+            <p class="text-muted">Separate, authenticated portals for students and teachers. Student data is encrypted and accessible only to verified users.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3 text-info bg-light rounded-circle p-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <h4 class="fw-bold">Instant Insights</h4>
+            <p class="text-muted">Visual dashboards help students identify their strengths and weaknesses across different subjects in real-time.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer-like CTA -->
+<section class="py-5 my-5 text-center bg-primary text-white rounded-4 shadow">
+    <div class="py-3">
+        <h2 class="fw-bold text-white">Ready to manage your grades?</h2>
+        <br>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('teacherRegister') }}" class="btn btn-light btn-lg px-5 fw-bold text-primary shadow-sm">Get Started</a>
+        {% else %}
+            <a href="{{ url_for('dashboard') if current_user.role == 'student' else url_for('calculator') }}" class="btn btn-light btn-lg px-5 fw-bold text-primary shadow-sm">Go to My Dashboard</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

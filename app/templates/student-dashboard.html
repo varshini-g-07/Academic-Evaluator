@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- HERO SECTION: Overall CGPA -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+            <div class="card border-0 shadow-lg bg-primary text-white overflow-hidden">
+                <div class="card-body p-5">
+                    <h5 class="text-uppercase opacity-75 fw-bold mb-3">Academic Standing</h5>
+                    <h1 class="display-1 fw-bolder mb-0">
+                        {{ "%.2f"|format(marks.cgpa) if marks.cgpa else "N/A" }}
+                    </h1>
+                    <p class="fs-4">Overall CGPA</p>
+                    <div class="mt-4 pt-3 border-top border-light border-opacity-25">
+                        <span class="me-3"><i class="bi bi-person-badge me-2"></i><strong>Roll No:</strong> {{ marks.rollno }}</span>
+                        <span><i class="bi bi-mortarboard me-2"></i><strong>Student:</strong> {{ marks.studentName }}</span>
+                    </div>
+                </div>
+                <!-- Subtle background decoration -->
+                <div style="position: absolute; bottom: -20px; right: -20px; opacity: 0.1;">
+                    <i class="bi bi-graph-up-arrow" style="font-size: 10rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERFORMANCE TABLE SECTION -->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="fw-bold text-dark mb-0">Subject Wise Analysis</h3>
+                <button class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i> Print Report
+                </button>
+            </div>
+
+            {% if marks.performance and marks.performance|length > 0 %}
+                <div class="card border-0 shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 py-3 text-uppercase small fw-bold text-muted">Course / Subject</th>
+                                    <th class="text-center py-3 text-uppercase small fw-bold text-muted">Weighted Mark</th>
+                                    <th class="text-center py-3 text-uppercase small fw-bold text-muted">Grade Point</th>
+                                    <th class="pe-4 text-end py-3 text-uppercase small fw-bold text-muted">Final Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in marks.performance %}
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="fw-bold text-primary">{{ record.subject }}</div>
+                                        <div class="text-muted x-small">Standard Evaluation</div>
+                                    </td>
+                                    <td class="text-center py-3 fs-5 fw-semibold text-secondary">
+                                        {{ "%.1f"|format(record.mark) }}
+                                    </td>
+                                    <td class="text-center py-3">
+                                        {% if record.grade == 'O' %}10.0{% elif record.grade == 'A' %}9.0{% elif record.grade == 'B' %}8.0{% elif record.grade == 'C' %}7.0{% elif record.grade == 'D' %}6.0{% else %}0.0{% endif %}
+                                    </td>
+                                    <td class="pe-4 text-end py-3">
+                                        <span class="badge rounded-pill fs-6 px-3 
+                                            {% if record.grade in ['O', 'A'] %}bg-success
+                                            {% elif record.grade in ['B', 'C'] %}bg-info
+                                            {% elif record.grade == 'D' %}bg-warning text-dark
+                                            {% else %}bg-danger{% endif %}">
+                                            {{ record.grade }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <!-- EMPTY STATE -->
+                <div class="card border-0 shadow-sm text-center p-5">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <i class="bi bi-clipboard-x text-muted" style="font-size: 5rem;"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">No Marks Published Yet</h4>
+                        <p class="text-muted mx-auto" style="max-width: 400px;">
+                            Your instructor hasn't uploaded your performance data for this semester yet. Please check back later or contact your teacher.
+                        </p>
+                        <a href="{{ url_for('index') }}" class="btn btn-primary px-4 mt-3">Return Home</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

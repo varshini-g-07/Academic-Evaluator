@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow border-0 border-top border-info border-4">
+            <div class="card-body p-4 p-md-5">
+                <h3 class="fw-bold text-center mb-4 text-info">Student Portal</h3>
+                
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.rollno.label(class="form-label fw-semibold") }}
+                        {{ form.rollno(class="form-control" + (" is-invalid" if form.rollno.errors else ""), placeholder="Enter your Roll No") }}
+                        {% for error in form.rollno.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            {{ form.password.label(class="form-label fw-semibold") }}
+                            <a href="#" class="small text-decoration-none text-info">Forgot password?</a>
+                        </div>
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Enter password") }}
+                        {% for error in form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text mt-2 small">Default password is usually your Roll Number.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-info text-white w-100 py-2 fw-bold shadow-sm">Access Dashboard</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3 small">
+            <a href="{{ url_for('teacherLogin') }}" class="text-muted text-decoration-none">Are you a teacher? Log in here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
