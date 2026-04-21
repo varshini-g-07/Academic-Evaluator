@@ -80,7 +80,7 @@ def teacherLogin():
             if check_pass:
                 teacher = User(check_user)
                 login_user(teacher)
-                return redirect(url_for('classroom')) # also to change
+                return redirect(url_for('classroom'))
         else:
             flash("Incorrect username or password!")
     return render_template("teacher-login.html", form = form)
@@ -141,7 +141,7 @@ def calculator():
                 }}
             )
 
-            return redirect(url_for('classroom')) #redirect to dashboard
+            return redirect(url_for('classroom'))
 
         if form.reset.data:
             form = CgpaForm(formdata=None)
@@ -168,7 +168,7 @@ def studentLogin():
                 if check_pass:
                     return redirect(url_for('changePassword'))
                 else:
-                    return redirect(url_for('dashboard')) #eheh change to class view
+                    return redirect(url_for('dashboard'))
         else:
             flash('incorrect username or password!')   
   
