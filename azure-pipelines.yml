@@ -11,26 +11,30 @@ steps:
   displayName: 'Install Python 3.13'
 
 - script: |
+    python -m venv antenv
+    source antenv/bin/activate
     python -m pip install --upgrade pip
     pip install -r requirements.txt
-  displayName: 'Install Dependencies'
+  displayName: 'Install Dependencies in Virtual Environment'
 
 - script: |
     echo "MONGO_URI=$MONGO_URI" > .env
-    echo ".env file generated for the build environment"
   displayName: 'Generate Environment Configuration'
   env:
     MONGO_URI: $(MONGO_URI)
 
-- script: |
-    python -c "import os; from pymongo import MongoClient; print('Checking Mongo Connection...'); client = MongoClient(os.environ.get('MONGO_URI')); print('Connection Successful!')"
-  displayName: 'Validate Database Connectivity'
-  env:
-    MONGO_URI: $(MONGO_URI)
+- task: ArchiveFiles@2
+  displayName: 'Archive files'
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: zip
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
 - task: AzureWebApp@1
   displayName: 'Deploy Academic Evaluator'
   inputs:
     azureSubscription: 'AcademicEvaluatorSC'
     appName: 'academic-evaluator'
-    package: '$(System.DefaultWorkingDirectory)'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
