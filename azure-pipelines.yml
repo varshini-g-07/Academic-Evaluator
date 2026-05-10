@@ -10,8 +10,8 @@ variables:
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '3.9'
-  displayName: 'Install Python 3.9'
+    versionSpec: '3.13'
+  displayName: 'Install Python 3.13'
 
 - script: |
     python -m pip install --upgrade pip
