@@ -27,3 +27,10 @@ steps:
   displayName: 'Validate Database Connectivity'
   env:
     MONGO_URI: $(MONGO_URI)
+
+- task: AzureWebApp@1
+  displayName: 'Deploy Academic Evaluator'
+  inputs:
+    azureSubscription: 'AcademicEvaluatorSC'
+    appName: 'academic-evaluator'
+    package: '$(System.DefaultWorkingDirectory)'
