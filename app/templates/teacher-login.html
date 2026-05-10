@@ -19,10 +19,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between">
+                        <!--<div class="d-flex justify-content-between">
                             {{ form.password.label(class="form-label fw-semibold") }}
                             <a href="#" class="small text-decoration-none">Forgot password?</a>
-                        </div>
+                        </div>-->
                         {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Enter password") }}
                         {% for error in form.password.errors %}
                             <div class="invalid-feedback">{{ error }}</div>
