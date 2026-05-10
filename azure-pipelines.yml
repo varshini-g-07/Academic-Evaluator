@@ -4,9 +4,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  MONGO_URI: $(MONGO_URI)
-
 steps:
 - task: UsePythonVersion@0
   inputs:
